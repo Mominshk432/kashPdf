@@ -31,3 +31,7 @@ Route::prefix('options')->group(function () {
 Route::post('store', [FormController::class, 'store'])->name('form.store');
 
 Route::get('pdf/{customer_id}', [FormController::class, 'downloadPdf'])->name('download.pdf');
+
+Route::get('new-pdf', function () {
+    return view('newpdf');
+});
