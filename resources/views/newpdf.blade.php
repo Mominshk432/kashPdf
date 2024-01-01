@@ -162,21 +162,16 @@
                         <div class="col-sm-6">
                             <div class="mb-4 pull-left">
                                 <img style="width: 100px" src="{{asset('LOGO-1.png.webp')}}"/>
-                                <ul class="list list-unstyled mb-0 text-left">
-                                    <li>2269 Six Sigma</li>
-                                    <li>New york city</li>
-                                    <li>+1 474 44737 47</li>
-
-                                </ul>
                             </div>
                         </div>
 
                         <div class="col-sm-6">
                             <div class="mb-4 ">
                                 <div class="text-sm-right">
-                                    <h4 class="invoice-color mb-2 mt-md-2">PO #BBB1243</h4>
+                                    <h4 class="invoice-color mb-2 mt-md-2">PO #{{$customerInfo->po_number ?? ''}}</h4>
                                     <ul class="list list-unstyled mb-0">
-                                        <li>Date: <span class="font-weight-semibold">Date:</span></li>
+                                        <li>Date: <span
+                                                class="font-weight-semibold">{{$customerInfo->date ?? ''}}</span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -186,26 +181,21 @@
                     <div class="d-md-flex flex-md-wrap">
                         <div class="mb-4 mb-md-2 text-left">
                             <ul class="list list-unstyled mb-0">
-                                <li><h5 class="my-2">Buyer:</h5></li>
-                                <li><span class="font-weight-semibold">Contact: </span></li>
-                                <li>Address:Gurung Street</li>
-                                <li>Contact: 234 456 5678</li>
-                                <li><a href="#" data-abc="true">Email:tibco@samantha.com</a></li>
+                                <li><h5 class="my-2">Buyer:{{$customerInfo->buyer_name ?? ''}}</h5></li>
+                                <li><span class="font-weight-semibold">Contact:  {{$customerInfo->contact ?? ''}}</span>
+                                </li>
+                                <li>Address: {{$customerInfo->address ?? ''}}</li>
+                                <li>Contact: {{$customerInfo->telephone ?? ''}}</li>
+                                <li><a href="#" data-abc="true">Email:{{$customerInfo->email ?? ''}}</a></li>
                             </ul>
                         </div>
 
                         <div class="mb-2 ml-auto">
                             <div class="d-flex flex-wrap wmin-md-400">
                                 <ul class="list list-unstyled mb-0 text-left">
-                                    <li>City:</li>
-                                    <li>State:</li>
-                                    <li>ZIP:</li>
-                                </ul>
-
-                                <ul class="list list-unstyled text-right mb-0 ml-auto">
-                                    <li>Hong Kong</li>
-                                    <li>Thurnung street, 21</li>
-                                    <li>38000</li>
+                                    <li>City: {{$customerInfo->city ?? ''}}</li>
+                                    <li>State: {{$customerInfo->state ?? ''}}</li>
+                                    <li>ZIP: {{$customerInfo->zip ?? ''}}</li>
                                 </ul>
                             </div>
                         </div>
@@ -226,12 +216,12 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Base Car</td>
-                            <td>VIN</td>
-                            <td>Exterior Color</td>
-                            <td>MB Code</td>
-                            <td>Interior Color</td>
-                            <td>REP</td>
+                            <td>{{$carInfo->base_car ?? ''}}</td>
+                            <td>{{$carInfo->vin ?? ''}}</td>
+                            <td>{{$carInfo->exterior_color ?? ''}}</td>
+                            <td>{{$carInfo->mb_code ?? ''}}</td>
+                            <td>{{$carInfo->interior_color ?? ''}}</td>
+                            <td>{{$carInfo->rep ?? ''}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -246,14 +236,25 @@
                         </tr>
                         </thead>
                         <tbody>
-
-
+                        @php
+                            $sum = 0;
+                        @endphp
+                        @foreach($chunked as $item)
+                            <tr>
+                                @foreach($item as $it)
+                                    @php
+                                        $sum += $it->price;
+                                    @endphp
+                                    <td>
+                                        <h6 class="mb-0">{{$it->title ?? ''}}</h6>
+                                    </td>
+                                    <td>${{$it->price ?? ''}}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach
                         <tr>
-                            <td>
-                                <h6 class="mb-0">Arts and design template</h6>
-                                <span class="text-muted">in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure dolor in reprehenderit</span>
-                            </td>
-                            <td>$120</td>
+                            <td></td>
+                            <td colspan="">${{$sum}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -269,19 +270,26 @@
                         </thead>
                         <tbody>
 
-
+                        @php
+                        $sum = 0;
+                        @endphp
+                        @foreach($options as $option)
+                            @php
+                            $sum += $option->price ?? 0;
+                            @endphp
                         <tr>
                             <td colspan="9">
-                                <h6 class="mb-0">Arts and design template</h6>
-                                <span class="text-muted">in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure dolor in reprehenderit</span>
-                            </td>
-                            <td>$120</td>
+                                <h6 class="mb-0">{{$option->title ?? ''}}</h6>
+                             </td>
+                            <td>${{$option->price ?? ''}}</td>
                         </tr>
+                        @endforeach
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="9">*** This function requires the client to have a T-Mobile 5G Internet contract.</td>
-                            <td>Total : $12321</td>
+                            <td colspan="9">
+                            </td>
+                            <td>Total : ${{$sum}}</td>
                         </tr>
                         <tr style="height:13pt">
                             <td style="width:395pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt"
@@ -291,37 +299,46 @@
                                 <ol id="l28">
                                     <li data-list-text="(i)"><p class="s12"
                                                                 style="padding-top: 4pt;padding-left: 1pt;padding-right: 1pt;text-indent: 0pt;line-height: 120%;text-align: left;">
-                                            Buyer has read the printed matter of this Purchase Agreement, also includes all of the Terms
+                                            Buyer has read the printed matter of this Purchase Agreement, also includes
+                                            all of the Terms
                                             and
-                                            Conditions of this Purchase Agreement hereof and Buyer agrees to all of such terms as part
+                                            Conditions of this Purchase Agreement hereof and Buyer agrees to all of such
+                                            terms as part
                                             of
                                             this agreement as if each were printed above Buyer&#39;s signature.</p>
                                         <p style="text-indent: 0pt;text-align: left;"><br/></p></li>
                                     <li data-list-text="(ii)"><p class="s12"
                                                                  style="padding-left: 1pt;padding-right: 13pt;text-indent: 0pt;line-height: 120%;text-align: left;">
-                                            That this Agreement cancels or supersedes any prior Agreement or discussions, as of the date
-                                            here of comprises the completed and exclusive statement of the terms and conditions of the
+                                            That this Agreement cancels or supersedes any prior Agreement or
+                                            discussions, as of the date
+                                            here of comprises the completed and exclusive statement of the terms and
+                                            conditions of the
                                             Agreement relating to the subject matter here of and,</p>
                                         <p style="text-indent: 0pt;text-align: left;"><br/></p></li>
                                     <li data-list-text="(iii)"><p class="s12"
                                                                   style="padding-left: 1pt;padding-right: 10pt;text-indent: 0pt;line-height: 120%;text-align: left;">
-                                            That in no event shall the Buyer be entitled to lost revenue or consequential damages. Climb
-                                            Entertainment, LLC shall not be held responsible for any incidental damages for any default
+                                            That in no event shall the Buyer be entitled to lost revenue or
+                                            consequential damages. Climb
+                                            Entertainment, LLC shall not be held responsible for any incidental damages
+                                            for any default
                                             hereunder.</p></li>
                                 </ol>
                                 <p style="text-indent: 0pt;text-align: left;"><br/></p>
                                 <p class="s12"
                                    style="padding-left: 1pt;padding-right: 4pt;text-indent: 0pt;line-height: 120%;text-align: left;">
                                     UNTIL
-                                    ACCEPTED BY THE SIGNATURE OF AN AUTHORIZED REPRESENTATIVE OF CLIMB ENTERTAINMENT LLC CORPORATE
+                                    ACCEPTED BY THE SIGNATURE OF AN AUTHORIZED REPRESENTATIVE OF CLIMB ENTERTAINMENT LLC
+                                    CORPORATE
                                     OFFICE.
-                                    THIS CONTRACT CONTAINS A BINDING ARBITRATION PROVISION WHICH MAY BE ENFORCED BY THE PARTIES.</p>
+                                    THIS CONTRACT CONTAINS A BINDING ARBITRATION PROVISION WHICH MAY BE ENFORCED BY THE
+                                    PARTIES.</p>
                             </td>
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">PRICE</p></td>
+                                <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">PRICE</p>
+                            </td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$
-                                    1354</p>
+                                <p class="s2"
+                                   style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">${{$customerOptionsPrice ?? ''}}</p>
                             </td>
                         </tr>
                         <tr style="height:9pt">
@@ -335,9 +352,10 @@
                         <tr style="height:13pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
                                 <p class="s3"
-                                   style="padding-top: 1pt;text-indent: 0pt;text-align: right;">asdsa</p></td>
+                                   style="padding-top: 1pt;text-indent: 0pt;text-align: right;">{{$carInfo->base_car ?? ''}}</p></td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">car
+                                <p class="s2"
+                                   style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">car
                                     price</p>
                             </td>
                         </tr>
@@ -347,10 +365,11 @@
                         </tr>
                         <tr style="height:9pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s3" style="text-indent: 0pt;line-height: 8pt;text-align: right;">OPTIONS</p></td>
+                                <p class="s3" style="text-indent: 0pt;line-height: 8pt;text-align: right;">OPTIONS</p>
+                            </td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 8pt;text-align: left;">$
-                                    213123</p>
+                                <p class="s2"
+                                   style="padding-left: 3pt;text-indent: 0pt;line-height: 8pt;text-align: left;">${{$customerOptionsPrice ?? '0'}}</p>
                             </td>
                         </tr>
                         <tr style="height:9pt">
@@ -359,8 +378,9 @@
                         </tr>
                         <tr style="height:9pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt;border-right-color:#538135">
-                                <p class="s3" style="padding-right: 2pt;text-indent: 0pt;line-height: 8pt;text-align: right;">LAYOUT 01
-                                    SELECTION</p></td>
+                                <p class="s3"
+                                   style="padding-right: 2pt;text-indent: 0pt;line-height: 8pt;text-align: right;">
+                                    </p></td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-left-color:#538135;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
                                 <p style="text-indent: 0pt;text-align: left;"><br/></p></td>
                         </tr>
@@ -370,26 +390,32 @@
                         </tr>
                         <tr style="height:9pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s3" style="text-indent: 0pt;line-height: 8pt;text-align: right;">TOTAL MSRP</p></td>
+                                <p class="s3" style="text-indent: 0pt;line-height: 8pt;text-align: right;">TOTAL
+                                    MSRP</p></td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-left: 3pt;text-indent: 0pt;line-height: 8pt;text-align: left;">$
+                                <p class="s2"
+                                   style="padding-left: 3pt;text-indent: 0pt;line-height: 8pt;text-align: left;">$
                                     166,787.00</p>
                             </td>
                         </tr>
                         <tr style="height:13pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">DISCOUNT</p></td>
+                                <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">DISCOUNT</p>
+                            </td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$
+                                <p class="s2"
+                                   style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$
                                     5,000.00</p>
                             </td>
                         </tr>
                         <tr style="height:13pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-                                bgcolor="#F0F4FC"><p class="s16" style="text-indent: 0pt;text-align: right;">TOTAL SALE PRICE</p></td>
+                                bgcolor="#F0F4FC"><p class="s16" style="text-indent: 0pt;text-align: right;">TOTAL SALE
+                                    PRICE</p></td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                                 bgcolor="#F0F4FC"><p class="s2"
-                                                     style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$
+                                                     style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">
+                                    $
                                     161,787.00</p></td>
                         </tr>
                         <tr style="height:14pt">
@@ -402,34 +428,45 @@
                                                style="padding-top: 2pt;padding-right: 51pt;text-indent: 0pt;text-align: right;">
                                     BUILDER AUTHORIZED SIGNATURE:</p>
                                 <p style="text-indent: 0pt;text-align: left;"><br/></p>
-                                <p class="s7" style="padding-right: 54pt;text-indent: 0pt;text-align: right;">Check payable to ONE
+                                <p class="s7" style="padding-right: 54pt;text-indent: 0pt;text-align: right;">Check
+                                    payable to ONE
                                     HUNDRED
                                     NAMES LLC</p></td>
-                            <td style="width:58pt;border-bottom-style:solid;border-bottom-width:1pt" colspan="4" rowspan="3"><p
+                            <td style="width:58pt;border-bottom-style:solid;border-bottom-width:1pt" colspan="4"
+                                rowspan="3"><p
                                     style="text-indent: 0pt;text-align: left;"><br/></p></td>
                             <td style="width:149pt;border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                                 colspan="3" rowspan="3"><p class="s12"
                                                            style="padding-top: 2pt;padding-left: 45pt;text-indent: 0pt;text-align: left;">
                                     ACCEPTANCE SIGNATURE</p>
                                 <p style="text-indent: 0pt;text-align: left;"><br/></p>
-                                <p class="s2" style="padding-left: 28pt;text-indent: 0pt;text-align: left;">DATE: November 14, 2023</p>
+                                <p class="s2" style="padding-left: 28pt;text-indent: 0pt;text-align: left;">DATE:
+                                    November 14, 2023</p>
                             </td>
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">DEPOSIT</p></td>
+                                <p class="s2" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">DEPOSIT</p>
+                            </td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$ -</p></td>
+                                <p class="s2"
+                                   style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$ -</p>
+                            </td>
                         </tr>
                         <tr style="height:13pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">TRADE-IN</p></td>
+                                <p class="s2" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">TRADE-IN</p>
+                            </td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-                                <p class="s2" style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$ -</p></td>
+                                <p class="s2"
+                                   style="padding-top: 2pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">$ -</p>
+                            </td>
                         </tr>
                         <tr style="height:13pt">
                             <td style="width:99pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-                                bgcolor="#F0F4FC"><p class="s16" style="text-indent: 0pt;text-align: right;">TOTAL BALANCE DUE</p></td>
+                                bgcolor="#F0F4FC"><p class="s16" style="text-indent: 0pt;text-align: right;">TOTAL
+                                    BALANCE DUE</p></td>
                             <td style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-                                bgcolor="#F0F4FC"><p class="s3" style="padding-top: 2pt;text-indent: 0pt;text-align: right;">
+                                bgcolor="#F0F4FC"><p class="s3"
+                                                     style="padding-top: 2pt;text-indent: 0pt;text-align: right;">
                                     $161,787.00</p>
                             </td>
                         </tr>

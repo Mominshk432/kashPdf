@@ -1,5 +1,12 @@
 <?php
 
+use App\Models\CarInfo;
+use App\Models\CustomerAdditionalOptions;
+use App\Models\CustomerEquipments;
+use App\Models\CustomerInfo;
+use App\Models\Equipment;
+use App\Models\Options;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EquipmentsController;
 use App\Http\Controllers\AdditionalOptionsController;
@@ -32,6 +39,19 @@ Route::post('store', [FormController::class, 'store'])->name('form.store');
 
 Route::get('pdf/{customer_id}', [FormController::class, 'downloadPdf'])->name('download.pdf');
 
-Route::get('new-pdf', function () {
-    return view('newpdf');
+Route::get('new-pdf/{customer_id}', function ($customer_id = 1) {
+    $chunked = "";
+    $customerInfo = CustomerInfo::where('id', $customer_id)->first();
+    $carInfo = CarInfo::where('customer_id', $customerInfo->id)->first();
+    $numberOfParts = 3;
+    $records = DB::table('equipment')->get();
+    $chunkSize = ceil($records->count() / $numberOfParts);
+    $chunked = $records->chunk($chunkSize);
+    $customerEquipments = CustomerEquipments::where('customer_id', $customer_id)->pluck('equipment_id')->toArray();
+    $equipmentsPrice = Equipment::whereIn('id', $customerEquipments)->sum('price');
+    $options = Options::get();
+    $customerOptions = CustomerAdditionalOptions::where('customer_id', $customer_id)->pluck('option_id')->toArray();
+    $customerOptionsPrice = Options::whereIn('id', $customerOptions)->sum('price');
+    return view('newpdf', compact('customerInfo', 'carInfo', 'chunked', 'customerEquipments', 'equipmentsPrice', 'options', 'customerOptions', 'customerOptionsPrice'));
+
 });
